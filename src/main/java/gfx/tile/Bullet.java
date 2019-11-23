@@ -1,0 +1,130 @@
+package gfx.tile;
+
+import entity.AlienEnemy;
+import entity.Entity;
+import enums.Id;
+import game.Game;
+import game.Handler;
+
+import java.awt.*;
+
+public class Bullet extends Tile {
+    private Id target;
+    private Point destination;
+    private double growth;
+
+    private int Xd, Yd;
+    private double radAngle;
+
+    //    private xAngle
+    public Bullet(int x, int y, int width, int height, boolean solid, Id id, Handler handler) {
+        super(x, y, width, height, solid, id, handler);
+        this.velX = 4;
+        this.destination = new Point();
+    }
+
+    public Id getTarget() {
+        return target;
+    }
+
+    public void setTarget(Id target) {
+        this.target = target;
+    }
+
+    public void setDestination(int x, int y) {
+        this.destination.setLocation(x, y);
+        this.growth = (this.destination.getY() - this.getY()) / this.getY();
+
+        this.Xd = Math.abs(this.destination.x - this.getX());
+        this.Yd = Math.abs(this.destination.y - this.getY());
+        this.radAngle = Math.atan2(this.destination.y, this.destination.x) * 100;
+//        this.radAngle = Math.asin((this.Yd/ this.Xd)) / Math.PI * 180;
+    }
+
+    public Point getDestination() {
+        return this.destination;
+    }
+
+    public void changeFacing(int facing) {
+        this.setFacing(facing);
+        this.velX = facing == -1 ? this.velX : -this.velX;
+    }
+
+    @Override
+    public void render(Graphics g) {
+        Graphics2D g2d = (Graphics2D) g;
+
+//        if (this.getTarget() == Id.player) {
+//            this.radAngle += 1;
+//            RectangleRotate.rotate(g2d, x, y, width, height, this.radAngle);
+//        } else {
+//            if (this.getFacing() == -1) {
+//                g2d.drawImage(Game.Game.bullet.getBufferedImage(), x + width, y, -width, height, null);
+//            } else if (this.getFacing() == 1) {
+//                g2d.drawImage(Game.Game.bullet.getBufferedImage(), x, y, width, height, null);
+//            }
+//        }
+
+        if (this.getFacing() == -1) {
+            g2d.drawImage(Game.bullet.getBufferedImage(), x + width, y, -width, height, null);
+        } else if (this.getFacing() == 1) {
+            g2d.drawImage(Game.bullet.getBufferedImage(), x, y, width, height, null);
+        }
+    }
+
+    @Override
+    public void tick() {
+        x += velX;
+        y += velY + (this.growth * 4);
+
+        this.bullitCollision();
+    }
+
+    private void bullitCollision() {
+        boolean hitted = false;
+
+        for (Entity tile : handler.entity) {
+
+            if (tile.getId() == this.getTarget()) {
+
+                if (getBoundsBottom().intersects(tile.getBoundsTop())) {
+                    hitted = true;
+                } else if (getBoundsTop().intersects(tile.getBoundsBottom())) {
+                    hitted = true;
+                } else if (getBoundsRight().intersects(tile.getBoundsLeft())) {
+                    hitted = true;
+                } else if (getBoundsLeft().intersects(tile.getBoundsRight())) {
+                    hitted = true;
+                }
+
+                if (hitted) {
+                    handler.addExplosion(new Explosion(tile.getX(), tile.getY(), 64, 64, true, Id.explosion, handler));
+//                    Voor het verwijderen van een bestand.
+                    if (this.target == Id.alienEnemy) {
+                        AlienEnemy alienEnemy = (AlienEnemy) tile;
+                        alienEnemy.deleteTouchedFile();
+                        tile.hide = true;
+                    }
+                    this.hide = true;
+                    Handler.kills++;
+//                    this.music = new MusicPlayer("alienexplosion", AudioType.Sound);
+//                    this.music.run();
+                    break;
+                }
+            }
+        }
+    }
+
+    public double getRadAngle() {
+        return radAngle;
+    }
+
+    public void setRadAngle(double radAngle) {
+        this.radAngle = radAngle;
+    }
+
+    @Override
+    public String toString() {
+        return "Bullet X= " + this.velX + " | " + "Y= " + this.velY;
+    }
+}
