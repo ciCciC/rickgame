@@ -6,3 +6,4 @@ The current state of the project presents me with enough challenges to refactor 
 
 The idea behind this project was to create a playground for myself where you can experiment with mathematics, physics and computer science.
 
+![](../master/simple.png)
