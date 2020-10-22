@@ -3,14 +3,16 @@ package gfx.tile;
 import enums.Id;
 import game.Game;
 import game.Handler;
+import gfx.sprite.Sprite;
 import physics.interfaces.Broken;
 
 import java.awt.*;
 
 public class SquareWall extends Tile implements Broken {
 
-    public SquareWall(int x, int y, int width, int height, boolean solid, Id id, Handler handler) {
-        super(x, y, width, height, solid, id, handler);
+    public SquareWall(int x, int y, int width, int height, boolean solid, Id id) {
+        super(x, y, width, height, solid, id);
+        sprite = new Sprite( 1, 7);
     }
 
     @Override

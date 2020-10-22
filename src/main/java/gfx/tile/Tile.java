@@ -3,6 +3,7 @@ package gfx.tile;
 import audio.MusicPlayer;
 import enums.Id;
 import game.Handler;
+import gfx.sprite.Sprite;
 import physics.interfaces.CollisionBounds;
 import physics.interfaces.DepthOfField;
 
@@ -27,18 +28,17 @@ public abstract class Tile implements DepthOfField, CollisionBounds {
 
     public Id id;
 
-    public Handler handler;
-
     public boolean hide;
 
-    public Tile(int x, int y, int width, int height, boolean solid, Id id, Handler handler){
+    protected Sprite sprite;
+
+    public Tile(int x, int y, int width, int height, boolean solid, Id id){
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.solid = solid;
         this.id = id;
-        this.handler = handler;
         this.facing = 0;
         this.countHit = 0;
         this.depthPos = 2;
@@ -59,7 +59,7 @@ public abstract class Tile implements DepthOfField, CollisionBounds {
     public abstract void tick();
 
     public void die(){
-        handler.removeTile(this);
+        getHandlerInstance().removeTile(this);
     }
 
     public int getX() {
@@ -92,6 +92,10 @@ public abstract class Tile implements DepthOfField, CollisionBounds {
 
     public void setVelY(int velY) {
         this.velY = velY;
+    }
+
+    public Handler getHandlerInstance(){
+        return Handler.getInstance();
     }
 
     public Rectangle getBounds(){

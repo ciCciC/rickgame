@@ -11,8 +11,8 @@ public class Wayahime extends Entity{
 
     private final float MAX_SPEED = 20;
 
-    public Wayahime(int x, int y, int width, int height, Id id, Handler handler) {
-        super(x, y, width, height, id, handler);
+    public Wayahime(int x, int y, int width, int height, Id id) {
+        super(x, y, width, height, id);
         this.setGravity(0.25F);
         staticFacing = 0;
         this.jumping = false;
@@ -69,7 +69,7 @@ public class Wayahime extends Entity{
     protected void collision() {
 
         // Tile collisions
-        for (Tile tile : this.handler.tiles) {
+        for (Tile tile : getHandlerInstance().tiles) {
             if(tile.getId() == Id.wall || tile.getId() == Id.wallLeft || tile.getId() == Id.wallRight){
 
                 if(getBoundsTop().intersects(tile.getBounds())){
@@ -110,7 +110,7 @@ public class Wayahime extends Entity{
         }
 
         //Enemy collision
-        for(Entity entity : handler.entity){
+        for(Entity entity : getHandlerInstance().entity){
             if(entity.getId() == Id.alienEnemy){
                 AlienEnemy tmp = (AlienEnemy) entity;
                 if(getBoundsTop().intersects(entity.getBounds())){

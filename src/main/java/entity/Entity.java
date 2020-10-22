@@ -3,7 +3,10 @@ package entity;
 import audio.*;
 import enums.*;
 import game.*;
+import gfx.sprite.Sprite;
 import gfx.tile.*;
+import physics.PhysicsManagement;
+import physics.attack.Attack;
 import physics.interfaces.*;
 
 import java.awt.*;
@@ -23,11 +26,13 @@ public abstract class Entity implements DepthOfField, CollisionBounds {
 
     public Id id;
 
-    public Handler handler;
+//    public Handler handler;
 
     public boolean jumping = false, falling = true;
 
-    private float gravity;
+//    private float gravity;
+
+    private PhysicsManagement gravityMng;
 
     public double degrees = 0.0;
 
@@ -37,15 +42,17 @@ public abstract class Entity implements DepthOfField, CollisionBounds {
 
     private boolean unlock;
 
-    public Entity(int x, int y, int width, int height, Id id, Handler handler) {
+    protected Sprite sprite;
+    private Attack straightAttack, wideAttack;
+
+    public Entity(int x, int y, int width, int height, Id id) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.id = id;
-        this.handler = handler;
         this.hide = false;
-        this.gravity = Game.getPhysicsManagement().getGravity();
+        this.gravityMng = new PhysicsManagement();
     }
 
     protected abstract void collision();
@@ -55,19 +62,27 @@ public abstract class Entity implements DepthOfField, CollisionBounds {
     public abstract void tick();
 
     public void die() {
-        handler.removeEntity(this);
+        getHandlerInstance().removeEntity(this);
     }
 
-    public void shoot() {
-        int distanceFromPl = this.getX() + (this.getWidth() * this.facing);
-        Bullet bul = new Bullet(distanceFromPl, this.getY(), 64, 20, true, Id.bullet, handler);
-        bul.setFacing(this.facing);
-        bul.setTarget(Id.alienEnemy);
-        handler.addBullets(bul);
-
-        MusicPlayer musicLaser = new MusicPlayer(Musiclist.Soundlist.laser1, AudioType.Sound);
-        musicLaser.run();
+    public void attackStraight() {
+        straightAttack.attack();
     }
+
+    public void attackWide(){
+        wideAttack.attack();
+    }
+
+//    public void shoot() {
+//        int distanceFromPl = this.getX() + (this.getWidth() * this.facing);
+//        Bullet bul = new Bullet(distanceFromPl, this.getY(), 64, 20, true, Id.bullet, handler);
+//        bul.setFacing(this.facing);
+//        bul.setTarget(Id.alienEnemy);
+//        handler.addBullets(bul);
+//
+//        MusicPlayer musicLaser = new MusicPlayer(Musiclist.Soundlist.laser1, AudioType.Sound);
+//        musicLaser.run();
+//    }
 
     public int getX() {
         return x;
@@ -75,14 +90,6 @@ public abstract class Entity implements DepthOfField, CollisionBounds {
 
     public void setX(int x) {
         this.x = x;
-    }
-
-    public float getGravity() {
-        return gravity;
-    }
-
-    public void setGravity(float gravity) {
-        this.gravity = gravity;
     }
 
     public int getY() {
@@ -103,6 +110,14 @@ public abstract class Entity implements DepthOfField, CollisionBounds {
 
     public float getVelY() {
         return this.velY;
+    }
+
+    public int getFacing(){
+        return this.facing;
+    }
+
+    public void setFacing(int newFacing){
+        this.facing = newFacing;
     }
 
     public boolean isJumping() {
@@ -171,6 +186,18 @@ public abstract class Entity implements DepthOfField, CollisionBounds {
         this.height = height;
     }
 
+    public Handler getHandlerInstance(){
+        return Handler.getInstance();
+    }
+
+    public float getGravity() {
+        return gravityMng.getGravity();
+    }
+
+    public void setGravity(float gravity) {
+        this.gravityMng.setGravity(gravity);
+    }
+
     @Override
     public abstract Rectangle getBoundsRight();
 
@@ -182,4 +209,20 @@ public abstract class Entity implements DepthOfField, CollisionBounds {
 
     @Override
     public abstract Rectangle getBoundsTop();
+
+    public Attack getWideAttack() {
+        return wideAttack;
+    }
+
+    public void setWideAttack(Attack wideAttack) {
+        this.wideAttack = wideAttack;
+    }
+
+    public void setStraightAttack(Attack straightAttack) {
+        this.straightAttack = straightAttack;
+    }
+
+    public Attack getStraightAttack() {
+        return straightAttack;
+    }
 }

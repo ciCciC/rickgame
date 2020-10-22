@@ -39,7 +39,6 @@ public class Game extends Canvas implements Runnable {
     public static Handler handler;
     public static KeyManagement keyManagement;
     public static PhysicsManagement physicsManagement;
-    public static SpriteSheet sheet;
     private Camera cam;
 
     public static Sprite wall, wallLeft, wallRight;
@@ -75,16 +74,13 @@ public class Game extends Canvas implements Runnable {
     }
 
     private void init() {
-
-        handler = new Handler(this);
-        keyManagement = new KeyManagement(handler);
+        handler = Handler.getInstance();
+        keyManagement = new KeyManagement();
         physicsManagement = new PhysicsManagement();
 
-        keyInput = new KeyInput(handler);
+        keyInput = new KeyInput();
         keyInput.setKeyManagement(keyManagement);
         this.addKeyListener(keyInput);
-
-        sheet = new SpriteSheet("spritesheet3.png");
 
         cam = new Camera();
 
@@ -92,12 +88,12 @@ public class Game extends Canvas implements Runnable {
 
         this.initEntities();
 
-        bullet = new Sprite(sheet, 1, 2);
-        poop = new Sprite(sheet, 1, 3);
+        bullet = new Sprite( 1, 2);
+        poop = new Sprite( 1, 3);
 
         explosion = new BufferedImage[7];
 
-        topBar = new Box(0, 0, 100, 100, false, Id.topbar, handler);
+        topBar = new Box(0, 0, 100, 100, false, Id.topbar);
 
         handler.tiles.add(topBar);
 
@@ -117,12 +113,12 @@ public class Game extends Canvas implements Runnable {
     }
 
     private void initTiles(){
-        sideWallLeft = new Sprite(sheet, 4, 1);
-        sideWallRight = new Sprite(sheet, 4, 1);
-        wall = new Sprite(sheet, 2, 1);
-        squareWall = new Sprite(sheet, 1, 7);
-        wallLeft = new Sprite(sheet, 1, 1);
-        wallRight = new Sprite(sheet, 3, 1);
+        sideWallLeft = new Sprite( 4, 1);
+        sideWallRight = new Sprite( 4, 1);
+        wall = new Sprite( 2, 1);
+        squareWall = new Sprite( 1, 7);
+        wallLeft = new Sprite( 1, 1);
+        wallRight = new Sprite( 3, 1);
 
         try {
             christmasTree = new Sprite(FolderType.images, ImageType.gif, "christmastree.gif");
@@ -139,7 +135,7 @@ public class Game extends Canvas implements Runnable {
 //            playerWayahime[i] = new Sprite(sheet, (i + 1), 4);
 //        }
 
-        alienShip = new Sprite(sheet, 2, 2);
+        alienShip = new Sprite( 2, 2);
         try {
             zombieEnemy = new Sprite(FolderType.images, ImageType.gif, "zombieEnemy2.gif");
         } catch (IOException ex) {
@@ -269,7 +265,7 @@ public class Game extends Canvas implements Runnable {
 
         g.translate(cam.getX(), cam.getY());
 
-//        For contiues render
+//        For continues render
         keyManagement.render(g);
         handler.render(g);
         topBar.render(g);
@@ -360,19 +356,19 @@ public class Game extends Canvas implements Runnable {
         return HEIGHT * SCALE;
     }
 
-    public static Rectangle getVisibleArea() {
-        for (int i = 0; i < handler.entity.size(); i++) {
-            Entity e = handler.entity.get(i);
-            if (e.getId() == Id.player) {
-
-                playerX = e.getX();
-                playerY = e.getY();
-                return new Rectangle(playerX - (getFrameWidth() / 2 - 5),
-                        playerY - (getFrameHeigth() / 2 - 5), getFrameWidth() + 10, getFrameHeigth() + 10);
-            }
-        }
-        return null;
-    }
+//    public static Rectangle getVisibleArea() {
+//        for (int i = 0; i < handler.entity.size(); i++) {
+//            Entity e = handler.entity.get(i);
+//            if (e.getId() == Id.player) {
+//
+//                playerX = e.getX();
+//                playerY = e.getY();
+//                return new Rectangle(playerX - (getFrameWidth() / 2 - 5),
+//                        playerY - (getFrameHeigth() / 2 - 5), getFrameWidth() + 10, getFrameHeigth() + 10);
+//            }
+//        }
+//        return null;
+//    }
 
     public static PhysicsManagement getPhysicsManagement() {
         return physicsManagement;

@@ -5,8 +5,12 @@ import entity.AlienEnemy;
 import entity.Entity;
 import entity.Rick;
 import enums.Id;
+import game.util.GameArea;
 import gfx.tile.*;
+import lombok.NoArgsConstructor;
 import physics.TimeManager;
+import physics.attack.StraightAttack;
+import physics.attack.WideAttack;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -18,7 +22,10 @@ import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
+
 public class Handler {
+
+    private final static Handler instance = new Handler();
 
     public static int kills = 0;
 
@@ -27,27 +34,30 @@ public class Handler {
 
     public CopyOnWriteArrayList<Tile> tiles = new CopyOnWriteArrayList<>();
 
-    public LinkedList<File> filePaths = new LinkedList<>();
-    public LinkedList<Tile> bullets = new LinkedList<>();
+    public CopyOnWriteArrayList<File> filePaths = new CopyOnWriteArrayList<>();
+    public CopyOnWriteArrayList<Tile> bullets = new CopyOnWriteArrayList<>();
 
     public CopyOnWriteArrayList<Tile> explosions = new CopyOnWriteArrayList<>();
 
     public LinkedList<TimeManager> timeManagers = new LinkedList<>();
 
-    private Game game;
+    private Rick player;
 
     public Random ranX, ranY;
 
     public final int TILE_SIZE = 64;
 
-    public Handler(Game game) {
-        this.game = game;
+    public synchronized static Handler getInstance(){
+        if(instance == null) {
+            return new Handler();
+        }
+        return instance;
     }
 
     public void render(Graphics g) {
 
         for (Tile t : tiles) {
-            if (Game.getVisibleArea() != null && t.getBounds().intersects(Game.getVisibleArea())) {
+            if (getGameArea().getVisibleArea() != null && t.getBounds().intersects(getGameArea().getVisibleArea())) {
                 if (!t.hide) {
                     t.render(g);
                 }
@@ -73,14 +83,14 @@ public class Handler {
 //                b.render(g);
 //            }
 //        }
-        for (int i = 0; i < bullets.size(); i++) {
-            Tile b = bullets.get(i);
-            if (Game.getVisibleArea() != null && b.getBounds().intersects(Game.getVisibleArea())) {
-                b.render(g);
+
+        bullets.forEach(bullet -> {
+            if (getGameArea().getVisibleArea() != null && bullet.getBounds().intersects(getGameArea().getVisibleArea())) {
+                bullet.render(g);
             } else {
-                bullets.remove(i);
+                bullets.remove(bullet);
             }
-        }
+        });
 
         this.explosions.forEach((explosion) -> {
             explosion.render(g);
@@ -91,7 +101,7 @@ public class Handler {
 
     public void tick() {
 
-        Collections.sort(tiles, new ObjectComparator());
+        tiles.sort(new ObjectComparator());
 
 //        for (Tile t : tiles) {
 ////            t.tick();
@@ -104,21 +114,21 @@ public class Handler {
 //        }
 
         this.tiles.forEach(tile -> {
-            if (Game.getVisibleArea() != null && tile.getBounds().intersects(Game.getVisibleArea())) {
+            if (getGameArea().getVisibleArea() != null && tile.getBounds().intersects(getGameArea().getVisibleArea())) {
                 if (!tile.hide) {
                     tile.tick();
                 }
             }
         });
 
-        Collections.sort(entity, new ObjectComparator());
+        entity.sort(new ObjectComparator());
 
         this.entity = this.entity.stream()
-                .filter(val -> val.hide == false)
+                .filter(val -> !val.hide)
                 .collect(Collectors.toCollection(LinkedList::new));
 
         for (Entity e : entity) {
-//            if (Game.getVisibleArea() != null && e.getBounds().intersects(Game.getVisibleArea())) {
+//            if (getGameArea().getVisibleArea() != null && e.getBounds().intersects(getGameArea().getVisibleArea())) {
 //                if (!e.hide) {
 //                    e.tick();
 //                }
@@ -133,19 +143,18 @@ public class Handler {
 
         this.bullets = this.bullets.stream()
                 .filter(val -> !val.hide)
-                .collect(Collectors.toCollection(LinkedList::new));
+                .collect(Collectors.toCollection(CopyOnWriteArrayList::new));
 
-        for (int i = 0; i < bullets.size(); i++) {
-            Tile b = bullets.get(i);
-            if (Game.getVisibleArea() != null && b.getBounds().intersects(Game.getVisibleArea())) {
-                b.tick();
+        bullets.forEach(bullet -> {
+            if (getGameArea().getVisibleArea() != null && bullet.getBounds().intersects(getGameArea().getVisibleArea())) {
+                bullet.tick();
             } else {
-                bullets.remove(i);
+                bullets.remove(bullet);
             }
-        }
+        });
 
 //        this.bullets.forEach(bullet -> {
-//            if (Game.getVisibleArea() != null && bullet.getBounds().intersects(Game.getVisibleArea())) {
+//            if (getGameArea().getVisibleArea() != null && bullet.getBounds().intersects(getGameArea().getVisibleArea())) {
 //                bullet.tick();
 //            } else {
 //                bullets.remove(bullet);
@@ -153,7 +162,7 @@ public class Handler {
 //        });
 
 //        for (Bullet b : bullets) {
-//            if (Game.getVisibleArea() != null && b.getBounds().intersects(Game.getVisibleArea())) {
+//            if (getGameArea().getVisibleArea() != null && b.getBounds().intersects(getGameArea().getVisibleArea())) {
 //                b.tick();
 //            }
 //        }
@@ -161,15 +170,13 @@ public class Handler {
                 .filter(val -> !val.hide)
                 .collect(Collectors.toCollection(CopyOnWriteArrayList::new));
 
-        this.explosions.forEach((explosion) -> {
-            explosion.tick();
-        });
+        this.explosions.forEach(Tile::tick);
 
         this.timeManagers = this.timeManagers.stream()
                 .filter(val -> !val.isNotBusy())
                 .collect(Collectors.toCollection(LinkedList::new));
 
-        this.timeManagers.forEach((time) -> {time.tick();});
+        this.timeManagers.forEach(TimeManager::tick);
     }
 
     public void addEntity(Entity en) {
@@ -254,7 +261,7 @@ public class Handler {
 
                 this.initMagicWall(red, green, blue, x, y);
 
-                this.initPlayer(red, green, blue, x, y);
+//                this.initPlayer(red, green, blue, x, y);
 
             }
         }
@@ -274,6 +281,8 @@ public class Handler {
 //            AlienEnemy alienShip = new AlienEnemy(500, 500, 64, 64, Id.alienEnemy, handler);
 //            alienShip.addFile(handler.filePaths.get(0));
 //            this.addEntity(alienShip);
+
+        this.initRick(2, 2);
         this.initEnemy("Demonz", 1500);
 
 //        ZombieEnemy zombie1 = new ZombieEnemy(500, 500, 300, 400, Id.zombieEnemy, handler);
@@ -288,7 +297,7 @@ public class Handler {
             int xx = ranX.nextInt(randomRange);
             int yy = ranY.nextInt(randomRange);
 //            ZombieEnemy enemy = new ZombieEnemy(xx, yy, 100, 200, Id.zombieEnemy, handler);
-            AlienEnemy enemy = new AlienEnemy(xx, yy, TILE_SIZE, TILE_SIZE, Id.alienEnemy, this);
+            AlienEnemy enemy = new AlienEnemy(xx, yy, TILE_SIZE, TILE_SIZE, Id.alienEnemy);
             enemy.setDepth(i);
             enemy.addFile(new File(name));
             enemy.setSpeed(5);
@@ -298,19 +307,26 @@ public class Handler {
 
     private void initPlayer(int red, int green, int blue, int x, int y) {
         if (red == 0 && green == 0 && blue == 255) {
-//            Player ply = new Player(x * 64, y * 64, 64, 64, Id.player, this);
-//            Wayahime ply = new Wayahime(x * 64, y * 64, 64, 64, Id.player, this);
-            Rick ply = new Rick(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE, Id.player, this);
-//            Pewdiepie ply = new Pewdiepie(x * 64, y * 64, 64, 64, Id.player, this);
-            ply.setDepth(2);
-            addEntity(ply);
+//            Player player = new Player(x * 64, y * 64, 64, 64, Id.player, this);
+//            Wayahime player = new Wayahime(x * 64, y * 64, 64, 64, Id.player, this);
+//            Pewdiepie player = new Pewdiepie(x * 64, y * 64, 64, 64, Id.player, this);
+            this.initRick(x, y);
         }
+    }
+
+    private void initRick(int x, int y){
+        Rick player = new Rick(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE, Id.player);
+        player.setDepth(2);
+        player.setStraightAttack(new StraightAttack());
+        player.setWideAttack(new WideAttack(10));
+        addEntity(player);
+        setPlayer(player);
     }
 
     private void initWalls(int red, int green, int blue, int x, int y) {
         //Lisa wall left
         if (red == 0 && green == 0 && blue == 0) {
-            addTile(new SideWallLeft(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE, true, Id.sideWallLeft, this));
+            addTile(new SideWallLeft(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE, true, Id.sideWallLeft));
         }
 
         //Lisa wall right
@@ -319,27 +335,27 @@ public class Handler {
 //        }
         if (red == 0 && green == 255 && blue == 0) {
 //            addTile(new Wall((x * 64), (y * 64), 64, 64, true, Id.wall, this));
-            addTile(new Box((x * TILE_SIZE), (y * TILE_SIZE), TILE_SIZE, TILE_SIZE, true, Id.box, this));
+            addTile(new Box((x * TILE_SIZE), (y * TILE_SIZE), TILE_SIZE, TILE_SIZE, true, Id.box));
         }
 
         if (red == 0 && green == 200 && blue == 0) {
-            addTile(new WallLeft(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE, true, Id.wallLeft, this));
+            addTile(new WallLeft(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE, true, Id.wallLeft));
         }
 
         if (red == 0 && green == 100 && blue == 0) {
-            addTile(new WallRight(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE, true, Id.wallRight, this));
+            addTile(new WallRight(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE, true, Id.wallRight));
         }
 
         // Square wall GROENE VIERKANT
         if (red == 0 && green == 210 && blue == 0) {
-            addTile(new SquareWall((x * TILE_SIZE), (y * TILE_SIZE), TILE_SIZE, TILE_SIZE, true, Id.squareWall, this));
+            addTile(new SquareWall((x * TILE_SIZE), (y * TILE_SIZE), TILE_SIZE, TILE_SIZE, true, Id.squareWall));
         }
     }
 
     private void initMagicWall(int red, int green, int blue, int x, int y) {
         // Magic Wall BRUIN VIERKANT
         if (red == 153 && green == 102 && blue == 51) {
-            DoorWall magicWall = new DoorWall((x * TILE_SIZE), (y * TILE_SIZE), TILE_SIZE, TILE_SIZE, true, Id.magicWall, this, Game.keyManagement);
+            DoorWall magicWall = new DoorWall((x * TILE_SIZE), (y * TILE_SIZE), TILE_SIZE, TILE_SIZE, true, Id.magicWall, Game.keyManagement);
             magicWall.setCode("1234");
             magicWall.setTimerDuration(3);
             addTile(magicWall);
@@ -351,9 +367,21 @@ public class Handler {
         int height = 640;
         // Christmas tree rgb(102, 153, 0)
         if (red == 102 && green == 153 && blue == 0) {
-            Christmastree c_tree = new Christmastree(x * TILE_SIZE, y * TILE_SIZE, width, height, true, Id.christmastree, this);
+            Christmastree c_tree = new Christmastree(x * TILE_SIZE, y * TILE_SIZE, width, height, true, Id.christmastree);
             c_tree.setDepth(1);
             addTile(c_tree);
         }
+    }
+
+    public Rick getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Rick e){
+        this.player = e;
+    }
+
+    public GameArea getGameArea(){
+        return GameArea.getInstance();
     }
 }

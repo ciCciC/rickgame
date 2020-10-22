@@ -2,7 +2,6 @@ package entity;
 
 import enums.Id;
 import game.Game;
-import game.Handler;
 import gfx.sprite.Sprite;
 import gfx.tile.Tile;
 import physics.RotateRectangle;
@@ -14,14 +13,14 @@ public class Rick extends Entity {
 
     private final float MAX_SPEED = 20;
 
-    private Sprite playerRick;
+    private Sprite spriteRick;
 
     private float counter;
 
     private boolean alreadyUnlocked;
 
-    public Rick(int x, int y, int width, int height, Id id, Handler handler) {
-        super(x, y, width, height, id, handler);
+    public Rick(int x, int y, int width, int height, Id id) {
+        super(x, y, width, height, id);
         super.setGravity(0.25F);
         staticFacing = 0;
         this.jumping = false;
@@ -29,13 +28,13 @@ public class Rick extends Entity {
         this.isShooting = false;
         this.alreadyUnlocked = false;
 //        playerRick = new Sprite(new BufferedImage[16], Game.Game.sheet, 8, false, true);
-        playerRick = new Sprite(new BufferedImage[9], Game.sheet, 10, true, true);
+        spriteRick = new Sprite(new BufferedImage[9], 10, true, true);
     }
 
     @Override
     protected void collision() {
         // Tile collisions
-        for (Tile tile : this.handler.tiles) {
+        for (Tile tile : this.getHandlerInstance().tiles) {
 
 //            if(tile.getId() == Id.wall || tile.getId() == Id.wallLeft ||
 //                    tile.getId() == Id.wallRight ||
@@ -84,7 +83,7 @@ public class Rick extends Entity {
         }
 
         //Enemy collision
-        for(Entity entity : handler.entity){
+        for(Entity entity : getHandlerInstance().entity){
             if(entity.getId() == Id.zombieEnemy){
                 ZombieEnemy tmp = (ZombieEnemy) entity;
                 if(getBoundsTop().intersects(tmp.getBoundsBottom())){
@@ -116,7 +115,6 @@ public class Rick extends Entity {
 
     @Override
     public void render(Graphics g) {
-
         this.animation(g);
 //        RectangleBound.renderBound(g, this, Color.CYAN);
     }
@@ -126,7 +124,7 @@ public class Rick extends Entity {
 //        g.drawImage(playerRick.animation[playerRick.getIndex()], x, y, width, height, null);
 
         //Do rotation
-        RotateRectangle.Render(g, playerRick, x, y, degrees);
+        RotateRectangle.Render(g, spriteRick, x, y, degrees);
 
     }
 
@@ -193,31 +191,31 @@ public class Rick extends Entity {
         this.counter += 5;
 
         if(counter > 0.05){
-            if(playerRick.getIndex() == playerRick.animation.length-1){
-                playerRick.setIndex(0);
+            if(spriteRick.getIndex() == spriteRick.animation.length-1){
+                spriteRick.setIndex(0);
             }else{
-                playerRick.nextIndex();
+                spriteRick.nextIndex();
             }
         }
     }
 
     private void animationMotion(){
         if(staticFacing == 0){
-            playerRick.setIndex(0);
+            spriteRick.setIndex(0);
 
         }else if(facing == -1){
 
-            if(playerRick.getIndex() == 2){
-                playerRick.setIndex(4);
-            }else if(playerRick.getIndex() != 2 || playerRick.getIndex() != 4){
-                playerRick.setIndex(2);
+            if(spriteRick.getIndex() == 2){
+                spriteRick.setIndex(4);
+            }else if(spriteRick.getIndex() != 2 || spriteRick.getIndex() != 4){
+                spriteRick.setIndex(2);
             }
 
         }else if(facing == 1){
-            if(playerRick.getIndex() < 6 || playerRick.getIndex() == playerRick.animation.length-1){
-                playerRick.setIndex(6);
+            if(spriteRick.getIndex() < 6 || spriteRick.getIndex() == spriteRick.animation.length-1){
+                spriteRick.setIndex(6);
             }else{
-                playerRick.setIndex(8);
+                spriteRick.setIndex(8);
             }
         }
     }

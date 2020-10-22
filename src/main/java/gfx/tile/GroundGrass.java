@@ -7,8 +7,8 @@ import game.Handler;
 import java.awt.*;
 
 public class GroundGrass extends Tile {
-    public GroundGrass(int x, int y, int width, int height, boolean solid, Id id, Handler handler) {
-        super(x, y, width, height, solid, id, handler);
+    public GroundGrass(int x, int y, int width, int height, boolean solid, Id id) {
+        super(x, y, width, height, solid, id);
     }
 
     @Override

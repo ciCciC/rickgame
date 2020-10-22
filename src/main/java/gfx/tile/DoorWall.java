@@ -21,8 +21,8 @@ public class DoorWall extends Tile {
     private KeyManagement keyManagement;
     public Sprite magicDoor;
 
-    public DoorWall(int x, int y, int width, int height, boolean solid, Id id, Handler handler, KeyManagement keyManagement) {
-        super(x, y, width, height, solid, id, handler);
+    public DoorWall(int x, int y, int width, int height, boolean solid, Id id, KeyManagement keyManagement) {
+        super(x, y, width, height, solid, id);
         this.keyManagement = keyManagement;
         counter++;
         objectIdentity = counter;

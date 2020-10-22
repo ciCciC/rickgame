@@ -8,8 +8,8 @@ import java.awt.*;
 
 public class TwirleBullet extends Bullet {
 
-    public TwirleBullet(int x, int y, int width, int height, boolean solid, Id id, Handler handler) {
-        super(x, y, width, height, solid, id, handler);
+    public TwirleBullet(int x, int y, int width, int height, boolean solid, Id id) {
+        super(x, y, width, height, solid, id);
     }
 
     @Override

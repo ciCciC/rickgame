@@ -23,8 +23,8 @@ public class ZombieEnemy extends Entity implements CollisionBoundsAI {
 
     private int setFacing;
 
-    public ZombieEnemy(int x, int y, int width, int height, Id id, Handler handler) {
-        super(x, y, width, height, id, handler);
+    public ZombieEnemy(int x, int y, int width, int height, Id id) {
+        super(x, y, width, height, id);
         velX = 2;
         color = Color.YELLOW;
         this.deleted = false;
@@ -35,7 +35,7 @@ public class ZombieEnemy extends Entity implements CollisionBoundsAI {
     @Override
     protected void collision() {
 
-        for (Tile tile : handler.tiles) {
+        for (Tile tile : getHandlerInstance().tiles) {
 
             if(Id.isWall(tile.getId()) && tile.solid)
             {

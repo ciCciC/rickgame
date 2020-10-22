@@ -15,8 +15,8 @@ public class Box extends Tile {
     private int tiles;
     private int explosions;
 
-    public Box(int x, int y, int width, int height, boolean solid, Id id, Handler handler) {
-        super(x, y, width, height, solid, id, handler);
+    public Box(int x, int y, int width, int height, boolean solid, Id id) {
+        super(x, y, width, height, solid, id);
         this.bullits = 0;
         this.alienships = 0;
         this.tiles = 0;
@@ -40,16 +40,16 @@ public class Box extends Tile {
 
     @Override
     public void tick() {
-        this.bullits = handler.getBullitSize();
+        this.bullits = getHandlerInstance().getBullitSize();
 
-        this.alienships = handler.entity.stream()
+        this.alienships = getHandlerInstance().entity.stream()
                 .filter(val -> val.id == Id.alienEnemy)
                 .collect(Collectors.toCollection(LinkedList::new))
                 .size();
 
-        this.tiles = handler.getTileSize();
+        this.tiles = getHandlerInstance().getTileSize();
 
-        this.explosions = handler.explosions.size();
+        this.explosions = getHandlerInstance().explosions.size();
     }
 
 }
