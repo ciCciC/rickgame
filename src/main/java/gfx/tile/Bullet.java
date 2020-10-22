@@ -5,6 +5,7 @@ import entity.Entity;
 import enums.Id;
 import game.Game;
 import game.Handler;
+import gfx.sprite.Sprite;
 
 import java.awt.*;
 
@@ -17,10 +18,11 @@ public class Bullet extends Tile {
     private double radAngle;
 
     //    private xAngle
-    public Bullet(int x, int y, int width, int height, boolean solid, Id id, Handler handler) {
-        super(x, y, width, height, solid, id, handler);
+    public Bullet(int x, int y, int width, int height, boolean solid, Id id) {
+        super(x, y, width, height, solid, id);
         this.velX = 4;
         this.destination = new Point();
+        sprite = Game.bullet;
     }
 
     public Id getTarget() {
@@ -65,10 +67,12 @@ public class Bullet extends Tile {
 //            }
 //        }
 
+        System.out.println("Facing: " + this.getFacing());
+
         if (this.getFacing() == -1) {
-            g2d.drawImage(Game.bullet.getBufferedImage(), x + width, y, -width, height, null);
+            g2d.drawImage(sprite.getBufferedImage(), x + width, y, -width, height, null);
         } else if (this.getFacing() == 1) {
-            g2d.drawImage(Game.bullet.getBufferedImage(), x, y, width, height, null);
+            g2d.drawImage(sprite.getBufferedImage(), x, y, width, height, null);
         }
     }
 
@@ -83,7 +87,7 @@ public class Bullet extends Tile {
     private void bullitCollision() {
         boolean hitted = false;
 
-        for (Entity tile : handler.entity) {
+        for (Entity tile : getHandlerInstance().entity) {
 
             if (tile.getId() == this.getTarget()) {
 
@@ -98,7 +102,7 @@ public class Bullet extends Tile {
                 }
 
                 if (hitted) {
-                    handler.addExplosion(new Explosion(tile.getX(), tile.getY(), 64, 64, true, Id.explosion, handler));
+                    getHandlerInstance().addExplosion(new Explosion(tile.getX(), tile.getY(), 64, 64, true, Id.explosion));
 //                    Voor het verwijderen van een bestand.
                     if (this.target == Id.alienEnemy) {
                         AlienEnemy alienEnemy = (AlienEnemy) tile;

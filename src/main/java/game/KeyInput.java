@@ -26,8 +26,8 @@ public class KeyInput extends KeyAdapter {
 
     private KeyManagement keyManagement;
 
-    public KeyInput(Handler handler) {
-        this.handler = handler;
+    public KeyInput() {
+        this.handler = Handler.getInstance();
     }
 
     @Override
@@ -38,13 +38,15 @@ public class KeyInput extends KeyAdapter {
     public void keyPressed(KeyEvent e) {
 
         int key = e.getKeyCode();
-        Entity entity = handler.entity.stream()
-                .filter(val -> val.id == Id.player && !val.hide)
-                .findFirst()
-                .get();
+//        Entity entity = handler.entity.stream()
+//                .filter(val -> val.id == Id.player && !val.hide)
+//                .findFirst()
+//                .get();
 
-        this.playerKey(entity, e, key);
-        this.unlockCode(entity, e);
+        Rick player = handler.getPlayer();
+
+        this.playerKey(player, e, key);
+        this.unlockCode(player, e);
 
         if (key == KeyEvent.VK_ESCAPE) {
             System.exit(1);
@@ -91,7 +93,7 @@ public class KeyInput extends KeyAdapter {
             if (Id.poop == id) {
 //                bul = new Poop(pl.getX() + 15, pl.getY() + 15, 64, 64, true, Id.bullet, handler);
             } else if (Id.bullet == id) {
-                bul = new Bullet(pl.getX() + 15, pl.getY() + 15, 64, 64, true, Id.bullet, handler);
+                bul = new Bullet(pl.getX() + 15, pl.getY() + 15, 64, 64, true, Id.bullet);
             }
 
             bul.setFacing(pl.facing);
@@ -153,7 +155,7 @@ public class KeyInput extends KeyAdapter {
                 File tmp = new File(name + " " + (i+1));
 
                 AlienEnemy generatedAlien = new AlienEnemy((int) (Math.random() * player.x),
-                        (int) (Math.random() * player.y), 64, 64, Id.alienEnemy, handler);
+                        (int) (Math.random() * player.y), 64, 64, Id.alienEnemy);
 
                 generatedAlien.addFile(tmp);
                 handler.addEntity(generatedAlien);
@@ -167,7 +169,7 @@ public class KeyInput extends KeyAdapter {
     private void unlockCode(Entity entity, KeyEvent e) {
 
         if (e.getKeyCode() == KeyEvent.VK_U) {
-            TextBox codeBox = new TextBox(entity.getX(), entity.getY(), true, Id.textbox, handler, keyManagement);
+            TextBox codeBox = new TextBox(entity.getX(), entity.getY(), true, Id.textbox, keyManagement);
             if (entity.getUnlock()) {
                 handler.addTile(codeBox);
                 keyManagement.setUnlockCode(e.getKeyChar());
@@ -196,10 +198,7 @@ public class KeyInput extends KeyAdapter {
         }
     }
 
-    private void playerKey(Entity entity, KeyEvent e, int key) {
-
-//        Rick pl = (Rick) entity;
-        Entity pl = entity;
+    private void playerKey(Rick entity, KeyEvent e, int key) {
 
         if (key == KeyEvent.VK_UP) {
 
@@ -210,12 +209,12 @@ public class KeyInput extends KeyAdapter {
             System.out.println("RIGHT");
             entity.setVelX(5);
             entity.staticFacing = 1;
-            entity.facing = 1;
+            entity.setFacing(1);
         } else if (key == KeyEvent.VK_LEFT) {
             System.out.println("LEFT");
             entity.setVelX(-5);
             entity.staticFacing = -1;
-            entity.facing = -1;
+            entity.setFacing(-1);
 
         } else if (key == KeyEvent.VK_SPACE && !entity.isJumping()) {
             System.out.println("SPACE");
@@ -226,32 +225,32 @@ public class KeyInput extends KeyAdapter {
             this.music.run();
 
         } else if (key == KeyEvent.VK_X) {
-            pl.shoot();
-
+            System.out.println("Pressed: X");
+            entity.attackStraight();
         } else if (key == KeyEvent.VK_Z) {
 
             if (handler.getBullitSize() < 40) {
-//                this.generateBullits(pl, Id.poop);
+                entity.attackWide();
             }
 
         } else if (key == KeyEvent.VK_V) {
 
-            this.generateAlienships(1, pl, "Demonzz");
+            this.generateAlienships(1, entity, "Demonzz");
             System.out.println("ALIEN INVASION");
 
         } else if (key == KeyEvent.VK_B) {
             int distanceFromPl = 50;
-            distanceFromPl = pl.facing == -1 ? pl.getX() - distanceFromPl : pl.getX() + distanceFromPl;
+            distanceFromPl = entity.facing == -1 ? entity.getX() - distanceFromPl : entity.getX() + distanceFromPl;
 
-            handler.addTile(new Box(distanceFromPl, pl.getY(), 64, 64, true, Id.box, handler));
+            handler.addTile(new Box(distanceFromPl, entity.getY(), 64, 64, true, Id.box));
 
         } else if (key == KeyEvent.VK_SHIFT) {
 
-            pl.setVelX(pl.facing == 1 ? 15 : -15);
+            entity.setVelX(entity.facing == 1 ? 15 : -15);
 
         } else if (key == KeyEvent.VK_R) {
             entity.hide = true;
-            handler.addEntity(new Rick(400, 400, 64, 64, Id.player, handler));
+            handler.addEntity(new Rick(400, 400, 64, 64, Id.player));
         }
     }
 }

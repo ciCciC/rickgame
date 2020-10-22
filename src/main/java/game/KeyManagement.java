@@ -14,10 +14,11 @@ public class KeyManagement implements RenderInterface {
     private TimeManager timeManager;
     private Handler handler;
 
-    public KeyManagement(Handler handler){
-        this.unlockCode = new StringBuilder();
+    public KeyManagement(){
         this.runningTime = 0;
+        this.unlockCode = new StringBuilder();
         this.timeManager = new TimeManager();
+        this.handler = Handler.getInstance();
     }
 
     public void setUnlockCode(char newInput){

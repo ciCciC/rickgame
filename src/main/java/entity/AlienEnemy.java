@@ -34,8 +34,8 @@ public class AlienEnemy extends Entity implements CollisionBoundsAI {
 
     private TimeManager timeManagerRight, timeManagerLeft;
 
-    public AlienEnemy(int x, int y, int width, int height, Id id, Handler handler) {
-        super(x, y, width, height, id, handler);
+    public AlienEnemy(int x, int y, int width, int height, Id id) {
+        super(x, y, width, height, id);
         this.velX = 2;
         this.color = Color.YELLOW;
         this.MAX_SPEED = 10;
@@ -113,7 +113,7 @@ public class AlienEnemy extends Entity implements CollisionBoundsAI {
     @Override
     protected void collision() {
 
-        for (Tile tile : handler.tiles) {
+        for (Tile tile : getHandlerInstance().tiles) {
 
             if (Id.isWall(tile.getId()) && tile.solid) {
 
@@ -164,7 +164,7 @@ public class AlienEnemy extends Entity implements CollisionBoundsAI {
             }
         }
 
-        for (Entity entity : handler.entity) {
+        for (Entity entity : getHandlerInstance().entity) {
             if (entity.getId() == Id.player) {
 //                Entity player = entity;
 
@@ -241,14 +241,14 @@ public class AlienEnemy extends Entity implements CollisionBoundsAI {
     private void shoot(int duration, int direction, Entity entity, TimeManager timeManager) {
         if (timeManager.isNotBusy()) {
             int distanceFromPl = this.getX() + (this.getWidth() * direction);
-            this.bullet = new TwirleBullet(distanceFromPl, this.getY(), 64, 20, true, Id.bullet, handler);
+            this.bullet = new TwirleBullet(distanceFromPl, this.getY(), 64, 20, true, Id.bullet);
             this.bullet.setFacing(direction);
             this.bullet.setTarget(Id.player);
             this.bullet.setDestination(entity.getX(), entity.getY());
 
             timeManager.start(duration);
-            handler.addTimeManagers(timeManager);
-            handler.addBullets(this.bullet);
+            getHandlerInstance().addTimeManagers(timeManager);
+            getHandlerInstance().addBullets(this.bullet);
         }
     }
 

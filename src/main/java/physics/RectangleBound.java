@@ -70,7 +70,7 @@ public class RectangleBound {
         g2d.draw(entityAi.getBoundsRightAI());
     }
 
-    public static void kortTijdigRenderBound(Graphics g, Tile e, Color color){
+    public static void shortTimeRenderBound(Graphics g, Tile e, Color color){
 
         Graphics2D g2d = (Graphics2D)g;
 

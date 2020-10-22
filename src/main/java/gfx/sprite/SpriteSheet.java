@@ -1,6 +1,7 @@
 package gfx.sprite;
 
 import enums.FolderType;
+import gfx.TileProperty;
 import manager.Resource;
 
 import javax.imageio.ImageIO;
@@ -10,9 +11,22 @@ import java.io.IOException;
 
 public class SpriteSheet {
 
+    private final static SpriteSheet instance = new SpriteSheet();
+
     private BufferedImage sheet;
 
-    public SpriteSheet(String filename){
+    /**
+     * Size of the frame in the sheet
+     */
+    private final int sX = 32;
+
+    /**
+     * Size of the frame in the sheet
+     */
+    private final int sY = 32;
+
+    public SpriteSheet(){
+        String filename = "spritesheet3.png";
         try {
             sheet = ImageIO.read(new File(Resource
                     .getResourcePath(FolderType.ress,
@@ -22,15 +36,22 @@ public class SpriteSheet {
         }
     }
 
+    public synchronized static SpriteSheet getInstance() {
+        if(instance == null){
+            return new SpriteSheet();
+        }
+        return instance;
+    }
+
     public BufferedImage getSprite(int x, int y){
-        return sheet.getSubimage(x*32-32, y*32-32, 32, 32);
+        return sheet.getSubimage(x*sX-sX, y*sY-sY, sX, sY);
     }
 
     public BufferedImage getSpriteBigHeight(int x, int y){
-        return sheet.getSubimage(x*32-32, y*32-32, 32, 64);
+        return sheet.getSubimage(x*sX-sX, y*sY-sY, sX, TileProperty.HEIGHT);
     }
 
-    public BufferedImage getSpriteBigHeightandWidth(int x, int y){
-        return sheet.getSubimage(x*32-32, y*32-32, 64, 64);
+    public BufferedImage getSpriteBigHeightAndWidth(int x, int y){
+        return sheet.getSubimage(x*sX-sX, y*sY-sY, TileProperty.WIDTH, TileProperty.HEIGHT);
     }
 }

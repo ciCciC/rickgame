@@ -1,15 +1,14 @@
 package gfx.tile;
 
 import enums.Id;
-import game.Handler;
 import physics.RectangleBound;
 
 import java.awt.*;
 
 public class Box extends Tile {
 
-    public Box(int x, int y, int width, int height, boolean solid, Id id, Handler handler){
-        super(x, y, width, height, solid, id, handler);
+    public Box(int x, int y, int width, int height, boolean solid, Id id){
+        super(x, y, width, height, solid, id);
     }
 
     @Override
@@ -35,7 +34,7 @@ public class Box extends Tile {
 //        g2d.setStroke(new BasicStroke(5));
         g2d.drawRect(x, y, width, height);
 
-        RectangleBound.kortTijdigRenderBound(g2d, this, randomColor);
+        RectangleBound.shortTimeRenderBound(g2d, this, randomColor);
     }
 
     @Override

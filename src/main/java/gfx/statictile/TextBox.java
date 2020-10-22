@@ -23,8 +23,8 @@ public class TextBox extends Tile {
         HEIGHT = 100;
     }
 
-    public TextBox(int x, int y, boolean solid, Id id, Handler handler, KeyManagement keyManagement) {
-        super(x, y-20, WIDTH, HEIGHT, solid, id, handler);
+    public TextBox(int x, int y, boolean solid, Id id, KeyManagement keyManagement) {
+        super(x, y-20, WIDTH, HEIGHT, solid, id);
         this.inputCode = new StringBuilder();
         this.keyManagement = keyManagement;
     }

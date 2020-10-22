@@ -3,13 +3,15 @@ package gfx.tile;
 import enums.Id;
 import game.Game;
 import game.Handler;
+import gfx.sprite.Sprite;
 
 import java.awt.*;
 
 public class SideWallLeft extends Tile {
 
-    public SideWallLeft(int x, int y, int width, int height, boolean solid, Id id, Handler handler){
-        super(x, y, width, height, solid, id, handler);
+    public SideWallLeft(int x, int y, int width, int height, boolean solid, Id id){
+        super(x, y, width, height, solid, id);
+        sprite = new Sprite(4, 1);
     }
 
     @Override

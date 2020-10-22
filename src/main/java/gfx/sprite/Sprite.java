@@ -23,30 +23,29 @@ public class Sprite {
     /**
      * Only an image
      * Info about the parameters
-     * @param sheet = index NxN
      * @param x = column N
      * @param y = row N
      */
-    public Sprite(SpriteSheet sheet, int x, int y){
-        image = sheet.getSprite(x, y);
+    public Sprite(int x, int y){
+        image = SpriteSheet.getInstance().getSprite(x, y);
     }
 
     /**
      * Only for animation
      * @param animation
-     * @param sheet
      * @param row
      * @param width bigger width
      * @param height bigger height
      */
-    public Sprite(BufferedImage [] animation, SpriteSheet sheet, int row, boolean width, boolean height){
+    public Sprite(BufferedImage [] animation, int row, boolean width, boolean height){
         this.animation = animation;
+        this.sheet = SpriteSheet.getInstance();
 
         for (int i = 0; i < this.animation.length; i++) {
             if(height && !width){
                 this.animation[i] = sheet.getSpriteBigHeight(i+1, row);
             }else if(height && width){
-                this.animation[i] = sheet.getSpriteBigHeightandWidth(i+1, row);
+                this.animation[i] = sheet.getSpriteBigHeightAndWidth(i+1, row);
             }else if(!height && !width){
                 this.animation[i] = sheet.getSprite(i+1, row);
             }
@@ -72,7 +71,7 @@ public class Sprite {
 
     public static void initAnimation(Sprite [] animation, SpriteSheet sheet, int row){
         for (int i = 0; i < animation.length; i++) {
-            animation[i] = new Sprite(sheet, (i + 1), row);
+            animation[i] = new Sprite((i + 1), row);
         }
     }
 
