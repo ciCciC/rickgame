@@ -25,14 +25,32 @@ public class WideAttack extends Attack {
         return (float) Math.floor((Math.sin((index * index) * Math.PI) * tile.speed));
     }
 
+    private int validatePosition(Tile tile) {
+        // TODO: Fix position
+        int playerPos = getPlayer().getX();
+        int playerRight = playerPos + getPlayer().getWidth();
+
+        if (getPlayer().isFacingLeft() && tile.velX > 0) {
+            return playerRight;
+        } else if (getPlayer().isFacingRight() && tile.velX > 0) {
+            return playerRight;
+        }
+        return playerPos;
+    }
+
     @Override
     protected void generate() {
         IntStream
                 .rangeClosed(0, this.fireLength)
-                .forEach(index -> {
+                .mapToObj(index -> {
                     Tile tile = generateTile();
                     tile.speed = (float) RandomNum.generateRandomNum(10, 30);
                     this.calculateAttack(tile, index);
+                    return tile;
+                })
+                .forEach(tile -> {
+                    int xPos = this.validatePosition(tile);
+                    tile.setX(xPos);
                     this.getHandlerInstance().addBullets(tile);
                 });
     }

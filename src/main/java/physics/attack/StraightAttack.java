@@ -7,8 +7,8 @@ public class StraightAttack extends Attack {
 
     @Override
     protected void generate() {
-        Bullet bul = generateTile();
-        bul.velX = (float) RandomNum.generateRandomNum(10, 30);
-        this.getHandlerInstance().addBullets(bul);
+        Bullet bullet = generateTile();
+        bullet.velX = (float) RandomNum.generateRandomNum(10, 30);
+        this.getHandlerInstance().addBullets(bullet);
     }
 }

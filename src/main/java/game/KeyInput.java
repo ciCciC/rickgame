@@ -225,7 +225,6 @@ public class KeyInput extends KeyAdapter {
             this.music.run();
 
         } else if (key == KeyEvent.VK_X) {
-            System.out.println("Pressed: X");
             entity.attackStraight();
         } else if (key == KeyEvent.VK_Z) {
 

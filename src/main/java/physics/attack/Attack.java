@@ -27,7 +27,10 @@ public abstract class Attack {
 
     Bullet generateTile(){
         Entity player = getPlayer();
-        int distance_pos = player.getX() + (player.getWidth() * player.getFacing());
+        int distance_pos = player.getX();
+        if(player.getFacing() == 1) {
+            distance_pos += player.getWidth();
+        }
         Bullet bullet = new Bullet(distance_pos, player.getBoundsRight().y + 15,
                 TileProperty.WIDTH, 20, true, Id.bullet);
         bullet.changeFacing(player.facing);

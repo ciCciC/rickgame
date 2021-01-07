@@ -116,6 +116,14 @@ public abstract class Entity implements DepthOfField, CollisionBounds {
         return this.facing;
     }
 
+    public boolean isFacingLeft() {
+        return this.getFacing() == -1;
+    }
+
+    public boolean isFacingRight() {
+        return this.getFacing() == 1;
+    }
+
     public void setFacing(int newFacing){
         this.facing = newFacing;
     }

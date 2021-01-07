@@ -69,16 +69,20 @@ public class Bullet extends Tile {
 
         System.out.println("Facing: " + this.getFacing());
 
-        if (this.getFacing() == -1) {
-            g2d.drawImage(sprite.getBufferedImage(), x + width, y, -width, height, null);
-        } else if (this.getFacing() == 1) {
+        if (this.getFacing() == -1 && this.velX < 0) {
+            g2d.drawImage(sprite.getBufferedImage(), x, y, width, height, null);
+        } else if(this.getFacing() == -1 && this.velX > 0) {
+            g2d.drawImage(sprite.getBufferedImage(), x, y, -width, height, null);
+        } else if (this.getFacing() == 1 && this.velX < 0) {
+            g2d.drawImage(sprite.getBufferedImage(), x, y, -width, height, null);
+        } else if (this.getFacing() == 1 && this.velX > 0) {
             g2d.drawImage(sprite.getBufferedImage(), x, y, width, height, null);
         }
     }
 
     @Override
     public void tick() {
-        x += velX;
+        x += this.getFacing() == -1 ? -velX : velX;
         y += velY + (this.growth * 4);
 
         this.bullitCollision();
