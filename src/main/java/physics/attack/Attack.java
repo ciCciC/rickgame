@@ -1,40 +1,43 @@
 package physics.attack;
 
 import entity.Entity;
-import enums.Id;
 import game.Handler;
-import gfx.tile.Bullet;
 import gfx.TileProperty;
+import gfx.tile.Tile;
 import lombok.Setter;
 
 @Setter
 public abstract class Attack {
     protected int fireLength;
 
-    protected abstract void generate();
+    protected abstract void generate(Tile tile);
 
-    public void attack(){
-        generate();
+    public void attack(Tile tile) {
+        generate(tile);
     }
 
     public Handler getHandlerInstance() {
         return Handler.getInstance();
     }
 
-    Entity getPlayer(){
+    public Entity getPlayer() {
         return Handler.getInstance().getPlayer();
     }
 
-    Bullet generateTile(){
+    @SuppressWarnings("unchecked")
+    public <T extends Tile> T calculatePosition(Tile tile) {
         Entity player = getPlayer();
         int distance_pos = player.getX();
-        if(player.getFacing() == 1) {
+
+        if (player.getFacing() == 1) {
             distance_pos += player.getWidth();
         }
-        Bullet bullet = new Bullet(distance_pos, player.getBoundsRight().y + 15,
-                TileProperty.WIDTH, 20, true, Id.bullet);
-        bullet.changeFacing(player.facing);
-        bullet.setTarget(Id.alienEnemy);
-        return bullet;
+
+        tile.x = distance_pos;
+        tile.y = player.getBoundsRight().y + 15;
+        tile.width = TileProperty.WIDTH;
+        tile.height = 20;
+        tile.changeFacing(player.facing);
+        return (T) tile;
     }
 }

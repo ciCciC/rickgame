@@ -1,6 +1,7 @@
 package physics.attack;
 
 import gfx.tile.Tile;
+import gfx.tile.TileFactory;
 import physics.RandomNum;
 
 import java.util.stream.IntStream;
@@ -39,19 +40,20 @@ public class WideAttack extends Attack {
     }
 
     @Override
-    protected void generate() {
+    protected void generate(Tile tile) {
         IntStream
                 .rangeClosed(0, this.fireLength)
                 .mapToObj(index -> {
-                    Tile tile = generateTile();
-                    tile.speed = (float) RandomNum.generateRandomNum(10, 30);
-                    this.calculateAttack(tile, index);
-                    return tile;
+                    Tile newTile = TileFactory.newInstance(tile.solid, tile.id);
+                    newTile = calculatePosition(newTile);
+                    newTile.speed = (float) RandomNum.generateRandomNum(10, 30);
+                    this.calculateAttack(newTile, index);
+                    return newTile;
                 })
-                .forEach(tile -> {
-                    int xPos = this.validatePosition(tile);
-                    tile.setX(xPos);
-                    this.getHandlerInstance().addBullets(tile);
+                .forEach(x -> {
+                    int xPos = this.validatePosition(x);
+                    x.setX(xPos);
+                    this.getHandlerInstance().addBullets(x);
                 });
     }
 }

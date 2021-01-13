@@ -241,7 +241,7 @@ public class AlienEnemy extends Entity implements CollisionBoundsAI {
     private void shoot(int duration, int direction, Entity entity, TimeManager timeManager) {
         if (timeManager.isNotBusy()) {
             int distanceFromPl = this.getX() + (this.getWidth() * direction);
-            this.bullet = new TwirleBullet(distanceFromPl, this.getY(), 64, 20, true, Id.bullet);
+            this.bullet = new TwirlBullet(distanceFromPl, this.getY(), 64, 20, true, Id.bullet);
             this.bullet.setFacing(direction);
             this.bullet.setTarget(Id.player);
             this.bullet.setDestination(entity.getX(), entity.getY());

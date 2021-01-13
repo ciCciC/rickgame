@@ -296,7 +296,6 @@ public class Handler {
         for (int i = 0; i < this.filePaths.size(); i++) {
             int xx = ranX.nextInt(randomRange);
             int yy = ranY.nextInt(randomRange);
-//            ZombieEnemy enemy = new ZombieEnemy(xx, yy, 100, 200, Id.zombieEnemy, handler);
             AlienEnemy enemy = new AlienEnemy(xx, yy, TILE_SIZE, TILE_SIZE, Id.alienEnemy);
             enemy.setDepth(i);
             enemy.addFile(new File(name));

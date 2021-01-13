@@ -6,6 +6,7 @@ import enums.Id;
 import game.Game;
 import game.Handler;
 import gfx.sprite.Sprite;
+import lombok.NoArgsConstructor;
 
 import java.awt.*;
 
@@ -16,6 +17,14 @@ public class Bullet extends Tile {
 
     private int Xd, Yd;
     private double radAngle;
+
+    public Bullet(boolean solid, Id target) {
+        super(solid, Id.bullet);
+        this.setTarget(target);
+        this.velX = 4;
+        this.destination = new Point();
+        sprite = Game.bullet;
+    }
 
     //    private xAngle
     public Bullet(int x, int y, int width, int height, boolean solid, Id id) {
@@ -47,10 +56,10 @@ public class Bullet extends Tile {
         return this.destination;
     }
 
-    public void changeFacing(int facing) {
-        this.setFacing(facing);
-        this.velX = facing == -1 ? this.velX : -this.velX;
-    }
+//    public void changeFacing(int facing) {
+//        this.setFacing(facing);
+//        this.velX = facing == -1 ? this.velX : -this.velX;
+//    }
 
     @Override
     public void render(Graphics g) {

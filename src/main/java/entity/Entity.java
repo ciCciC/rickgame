@@ -65,12 +65,12 @@ public abstract class Entity implements DepthOfField, CollisionBounds {
         getHandlerInstance().removeEntity(this);
     }
 
-    public void attackStraight() {
-        straightAttack.attack();
+    public void attackStraight(Tile tile) {
+        straightAttack.attack(tile);
     }
 
-    public void attackWide(){
-        wideAttack.attack();
+    public void attackWide(Tile tile){
+        wideAttack.attack(tile);
     }
 
 //    public void shoot() {

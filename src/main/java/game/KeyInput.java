@@ -11,6 +11,7 @@ import gfx.statictile.TextBox;
 import gfx.tile.Box;
 import gfx.tile.Bullet;
 import gfx.tile.Tile;
+import gfx.tile.TwirlBullet;
 import physics.RandomNum;
 
 import java.awt.event.KeyAdapter;
@@ -225,11 +226,11 @@ public class KeyInput extends KeyAdapter {
             this.music.run();
 
         } else if (key == KeyEvent.VK_X) {
-            entity.attackStraight();
+            entity.attackStraight(new TwirlBullet(true, Id.alienEnemy));
         } else if (key == KeyEvent.VK_Z) {
 
             if (handler.getBullitSize() < 40) {
-                entity.attackWide();
+                entity.attackWide(new Bullet(true, Id.alienEnemy));
             }
 
         } else if (key == KeyEvent.VK_V) {

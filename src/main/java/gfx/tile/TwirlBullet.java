@@ -6,9 +6,13 @@ import physics.RotateRectangle;
 
 import java.awt.*;
 
-public class TwirleBullet extends Bullet {
+public class TwirlBullet extends Bullet {
 
-    public TwirleBullet(int x, int y, int width, int height, boolean solid, Id id) {
+    public TwirlBullet(boolean solid, Id id) {
+        super(solid, id);
+    }
+
+    public TwirlBullet(int x, int y, int width, int height, boolean solid, Id id) {
         super(x, y, width, height, solid, id);
     }
 

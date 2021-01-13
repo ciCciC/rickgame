@@ -4,6 +4,7 @@ import audio.MusicPlayer;
 import enums.Id;
 import game.Handler;
 import gfx.sprite.Sprite;
+import lombok.NoArgsConstructor;
 import physics.interfaces.CollisionBounds;
 import physics.interfaces.DepthOfField;
 
@@ -32,6 +33,10 @@ public abstract class Tile implements DepthOfField, CollisionBounds {
 
     protected Sprite sprite;
 
+    public Tile(boolean solid, Id target) {
+        this(0, 0, 0, 0, solid, target);
+    }
+
     public Tile(int x, int y, int width, int height, boolean solid, Id id){
         this.x = x;
         this.y = y;
@@ -43,6 +48,11 @@ public abstract class Tile implements DepthOfField, CollisionBounds {
         this.countHit = 0;
         this.depthPos = 2;
 //        this.hide = false;
+    }
+
+    public void changeFacing(int facing) {
+        this.setFacing(facing);
+        this.velX = facing == -1 ? this.velX : -this.velX;
     }
 
     public void setFacing(int facing){
