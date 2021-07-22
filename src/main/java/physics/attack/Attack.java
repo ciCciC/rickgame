@@ -31,6 +31,8 @@ public abstract class Attack {
 
         if (player.getFacing() == 1) {
             distance_pos += player.getWidth();
+        } else if(player.getFacing() == -1) {
+            distance_pos -= 10;
         }
 
         tile.x = distance_pos;

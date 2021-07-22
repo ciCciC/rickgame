@@ -3,8 +3,9 @@ package entity;
 import audio.MusicPlayer;
 import enums.*;
 import game.*;
-import gfx.tile.Bullet;
+import gfx.tile.bullet.Bullet;
 import gfx.tile.*;
+import gfx.tile.bullet.TwirlBullet;
 import physics.*;
 import physics.interfaces.*;
 

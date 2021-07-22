@@ -15,7 +15,7 @@ public class WideAttack extends Attack {
     private void calculateAttack(Tile tile, int index) {
         tile.velX = calculateCosTimesSpeed(tile, index);
         tile.velY = calculateSinTimesSpeed(tile, index);
-        System.out.println("speed: " + tile.velX);
+//        System.out.println("speed: " + tile.velX);
     }
 
     private float calculateCosTimesSpeed(Tile tile, int index) {
@@ -26,17 +26,43 @@ public class WideAttack extends Attack {
         return (float) Math.floor((Math.sin((index * index) * Math.PI) * tile.speed));
     }
 
-    private int validatePosition(Tile tile) {
+    private void validatePosition(Tile tile) {
         // TODO: Fix position
         int playerPos = getPlayer().getX();
         int playerRight = playerPos + getPlayer().getWidth();
 
-        if (getPlayer().isFacingLeft() && tile.velX > 0) {
-            return playerRight;
-        } else if (getPlayer().isFacingRight() && tile.velX > 0) {
-            return playerRight;
+        boolean playerFacingDirection = getPlayer().isFacingLeft() || getPlayer().isFacingRight();
+
+        System.out.println("Tile x pos: \t" + tile.velX);
+        System.out.println("Player x pos: \t" + tile.velX);
+
+        int playerLeft = playerPos - 200;
+
+        if(getPlayer().isFacingLeft() && tile.velX > 0) {
+            tile.setX(playerRight);
+//            return playerRight;
+        } else if(getPlayer().isFacingLeft() && tile.velX < 0) {
+            tile.setX(playerLeft);
+//            return playerPos - 20;
+        } else if(getPlayer().isFacingNeutral() && tile.velX > 0) {
+            tile.setX(playerRight);
+//            return playerRight;
+        } else if(getPlayer().isFacingNeutral() && tile.velX < 0) {
+            tile.setX(playerLeft);
+//            return playerPos - 20;
         }
-        return playerPos;
+
+        System.out.println("Tile x pos: \t" + tile.velX);
+        System.out.println("Player x pos: \t" + tile.velX);
+
+//        if (playerFacingDirection && tile.velX > 0) {
+//            return playerRight;
+//        } else if (playerFacingDirection && tile.velX < 0) {
+//            return playerPos - 20;
+//        }
+//        return playerPos;
+
+//        return playerPos;
     }
 
     @Override
@@ -51,8 +77,9 @@ public class WideAttack extends Attack {
                     return newTile;
                 })
                 .forEach(x -> {
-                    int xPos = this.validatePosition(x);
-                    x.setX(xPos);
+                    this.validatePosition(x);
+//                    int xPos = this.validatePosition(x);
+//                    x.setX(xPos);
                     this.getHandlerInstance().addBullets(x);
                 });
     }

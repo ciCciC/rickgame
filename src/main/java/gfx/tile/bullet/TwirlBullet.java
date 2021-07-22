@@ -1,7 +1,7 @@
-package gfx.tile;
+package gfx.tile.bullet;
 
 import enums.Id;
-import game.Handler;
+import gfx.tile.bullet.Bullet;
 import physics.RotateRectangle;
 
 import java.awt.*;

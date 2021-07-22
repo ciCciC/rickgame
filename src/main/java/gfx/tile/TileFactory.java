@@ -1,6 +1,8 @@
 package gfx.tile;
 
 import enums.Id;
+import gfx.tile.bullet.Bullet;
+import gfx.tile.bullet.TwirlBullet;
 
 public interface TileFactory {
 

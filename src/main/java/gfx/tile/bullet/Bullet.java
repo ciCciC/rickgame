@@ -1,4 +1,4 @@
-package gfx.tile;
+package gfx.tile.bullet;
 
 import entity.AlienEnemy;
 import entity.Entity;
@@ -6,6 +6,8 @@ import enums.Id;
 import game.Game;
 import game.Handler;
 import gfx.sprite.Sprite;
+import gfx.tile.Explosion;
+import gfx.tile.Tile;
 import lombok.NoArgsConstructor;
 
 import java.awt.*;
@@ -76,7 +78,7 @@ public class Bullet extends Tile {
 //            }
 //        }
 
-        System.out.println("Facing: " + this.getFacing());
+//        System.out.println("Facing: " + this.getFacing());
 
         if (this.getFacing() == -1 && this.velX < 0) {
             g2d.drawImage(sprite.getBufferedImage(), x, y, width, height, null);
