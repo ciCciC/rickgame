@@ -92,9 +92,7 @@ public class Handler {
             }
         });
 
-        this.explosions.forEach((explosion) -> {
-            explosion.render(g);
-        });
+        this.explosions.forEach((explosion) -> explosion.render(g));
 
         this.timeManagers.forEach(time -> time.render(g));
     }
@@ -241,7 +239,7 @@ public class Handler {
 //        String filePath = "./resource/files";
 //        initFilesAsAliens(filePath);
         for (int i = 0; i < 5; i++) {
-            File tmp = new File("T-Series");
+            File tmp = new File("Stormtrooper");
             this.filePaths.add(tmp);
         }
 
@@ -256,13 +254,9 @@ public class Handler {
                 int blue = (pixel) & 0xff;
 
                 this.initChristmastree(red, green, blue, x, y);
-
                 this.initWalls(red, green, blue, x, y);
-
                 this.initMagicWall(red, green, blue, x, y);
-
 //                this.initPlayer(red, green, blue, x, y);
-
             }
         }
 
@@ -298,7 +292,7 @@ public class Handler {
             int yy = ranY.nextInt(randomRange);
             AlienEnemy enemy = new AlienEnemy(xx, yy, TILE_SIZE, TILE_SIZE, Id.alienEnemy);
             enemy.setDepth(i);
-            enemy.addFile(new File(name));
+            enemy.addFile(this.filePaths.get(i));
             enemy.setSpeed(5);
             this.addEntity(enemy);
         }
@@ -328,7 +322,6 @@ public class Handler {
             addTile(new SideWallLeft(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE, true, Id.sideWallLeft));
         }
 
-        //Lisa wall right
 //        if (red == 50 && green == 50 && blue == 50) {
 //            addTile(new SideWallRight(x * 64, y * 64, 64, 64, true, Id.sideWallRight, this));
 //        }
@@ -345,14 +338,14 @@ public class Handler {
             addTile(new WallRight(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE, true, Id.wallRight));
         }
 
-        // Square wall GROENE VIERKANT
+        // Square wall GREEN SQUARE
         if (red == 0 && green == 210 && blue == 0) {
             addTile(new SquareWall((x * TILE_SIZE), (y * TILE_SIZE), TILE_SIZE, TILE_SIZE, true, Id.squareWall));
         }
     }
 
     private void initMagicWall(int red, int green, int blue, int x, int y) {
-        // Magic Wall BRUIN VIERKANT
+        // Magic Wall BROWN SQUARE
         if (red == 153 && green == 102 && blue == 51) {
             DoorWall magicWall = new DoorWall((x * TILE_SIZE), (y * TILE_SIZE), TILE_SIZE, TILE_SIZE, true, Id.magicWall, Game.keyManagement);
             magicWall.setCode("1234");
