@@ -65,12 +65,12 @@ public abstract class Entity implements DepthOfField, CollisionBounds {
         getHandlerInstance().removeEntity(this);
     }
 
-    public void attackStraight() {
-        straightAttack.attack();
+    public void attackStraight(Tile tile) {
+        straightAttack.attack(tile);
     }
 
-    public void attackWide(){
-        wideAttack.attack();
+    public void attackWide(Tile tile){
+        wideAttack.attack(tile);
     }
 
 //    public void shoot() {
@@ -114,6 +114,18 @@ public abstract class Entity implements DepthOfField, CollisionBounds {
 
     public int getFacing(){
         return this.facing;
+    }
+
+    public boolean isFacingLeft() {
+        return this.getFacing() == -1;
+    }
+
+    public boolean isFacingRight() {
+        return this.getFacing() == 1;
+    }
+
+    public boolean isFacingNeutral() {
+        return this.getFacing() == 0;
     }
 
     public void setFacing(int newFacing){

@@ -9,8 +9,9 @@ import enums.AudioType;
 import enums.Id;
 import gfx.statictile.TextBox;
 import gfx.tile.Box;
-import gfx.tile.Bullet;
+import gfx.tile.bullet.Bullet;
 import gfx.tile.Tile;
+import gfx.tile.bullet.TwirlBullet;
 import physics.RandomNum;
 
 import java.awt.event.KeyAdapter;
@@ -225,19 +226,15 @@ public class KeyInput extends KeyAdapter {
             this.music.run();
 
         } else if (key == KeyEvent.VK_X) {
-            System.out.println("Pressed: X");
-            entity.attackStraight();
+            entity.attackStraight(new Bullet(true, Id.alienEnemy));
         } else if (key == KeyEvent.VK_Z) {
 
             if (handler.getBullitSize() < 40) {
-                entity.attackWide();
+                entity.attackWide(new Bullet(true, Id.alienEnemy));
             }
 
         } else if (key == KeyEvent.VK_V) {
-
             this.generateAlienships(1, entity, "Demonzz");
-            System.out.println("ALIEN INVASION");
-
         } else if (key == KeyEvent.VK_B) {
             int distanceFromPl = 50;
             distanceFromPl = entity.facing == -1 ? entity.getX() - distanceFromPl : entity.getX() + distanceFromPl;

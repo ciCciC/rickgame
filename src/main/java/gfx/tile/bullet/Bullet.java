@@ -1,4 +1,4 @@
-package gfx.tile;
+package gfx.tile.bullet;
 
 import entity.AlienEnemy;
 import entity.Entity;
@@ -6,6 +6,9 @@ import enums.Id;
 import game.Game;
 import game.Handler;
 import gfx.sprite.Sprite;
+import gfx.tile.Explosion;
+import gfx.tile.Tile;
+import lombok.NoArgsConstructor;
 
 import java.awt.*;
 
@@ -16,6 +19,14 @@ public class Bullet extends Tile {
 
     private int Xd, Yd;
     private double radAngle;
+
+    public Bullet(boolean solid, Id target) {
+        super(solid, Id.bullet);
+        this.setTarget(target);
+        this.velX = 4;
+        this.destination = new Point();
+        sprite = Game.bullet;
+    }
 
     //    private xAngle
     public Bullet(int x, int y, int width, int height, boolean solid, Id id) {
@@ -47,10 +58,10 @@ public class Bullet extends Tile {
         return this.destination;
     }
 
-    public void changeFacing(int facing) {
-        this.setFacing(facing);
-        this.velX = facing == -1 ? this.velX : -this.velX;
-    }
+//    public void changeFacing(int facing) {
+//        this.setFacing(facing);
+//        this.velX = facing == -1 ? this.velX : -this.velX;
+//    }
 
     @Override
     public void render(Graphics g) {
@@ -67,18 +78,22 @@ public class Bullet extends Tile {
 //            }
 //        }
 
-        System.out.println("Facing: " + this.getFacing());
+//        System.out.println("Facing: " + this.getFacing());
 
-        if (this.getFacing() == -1) {
-            g2d.drawImage(sprite.getBufferedImage(), x + width, y, -width, height, null);
-        } else if (this.getFacing() == 1) {
+        if (this.getFacing() == -1 && this.velX < 0) {
+            g2d.drawImage(sprite.getBufferedImage(), x, y, width, height, null);
+        } else if(this.getFacing() == -1 && this.velX > 0) {
+            g2d.drawImage(sprite.getBufferedImage(), x, y, -width, height, null);
+        } else if (this.getFacing() == 1 && this.velX < 0) {
+            g2d.drawImage(sprite.getBufferedImage(), x, y, -width, height, null);
+        } else if (this.getFacing() == 1 && this.velX > 0) {
             g2d.drawImage(sprite.getBufferedImage(), x, y, width, height, null);
         }
     }
 
     @Override
     public void tick() {
-        x += velX;
+        x += this.getFacing() == -1 ? -velX : velX;
         y += velY + (this.growth * 4);
 
         this.bullitCollision();

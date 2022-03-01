@@ -19,6 +19,7 @@ public class Rick extends Entity {
 
     private boolean alreadyUnlocked;
 
+    // -1 == left : 1 == right
     public Rick(int x, int y, int width, int height, Id id) {
         super(x, y, width, height, id);
         super.setGravity(0.25F);

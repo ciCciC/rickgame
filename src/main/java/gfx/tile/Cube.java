@@ -11,6 +11,10 @@ public class Cube extends Tile {
 
     private CubeGfx cubeGfx3D;
 
+    public Cube(boolean solid, Id id) {
+        super(solid, id);
+    }
+
     public Cube(int x, int y, int width, int height, boolean solid, Id id) {
         super(x, y, width, height, solid, id);
 
