@@ -26,7 +26,8 @@ public class SpriteSheet {
     private final int sY = 32;
 
     public SpriteSheet(){
-        String filename = "spritesheet3.png";
+//        String filename = "spritesheet3.png";
+        String filename = "spritesheet3ads.png";
         try {
             sheet = ImageIO.read(new File(Resource
                     .getResourcePath(FolderType.ress,

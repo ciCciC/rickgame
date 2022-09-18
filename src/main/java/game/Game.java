@@ -47,7 +47,7 @@ public class Game extends Canvas implements Runnable {
     public static Sprite sideWallLeft, sideWallRight;
     public static Sprite[] playerWayahime;
 
-    public static Sprite bullet, poop;
+    public static Sprite bullet, poop, basketball;
     public static BufferedImage[] explosion;
     public static Sprite alienShip, zombieEnemy;
     public static Sprite christmasTree;
@@ -89,6 +89,7 @@ public class Game extends Canvas implements Runnable {
         this.initEntities();
 
         bullet = new Sprite( 1, 2);
+        basketball = new Sprite( 4, 2);
         poop = new Sprite( 1, 3);
 
         explosion = new BufferedImage[7];
@@ -135,7 +136,8 @@ public class Game extends Canvas implements Runnable {
 //            playerWayahime[i] = new Sprite(sheet, (i + 1), 4);
 //        }
 
-        alienShip = new Sprite( 2, 2);
+//        alienShip = new Sprite( 2, 2);
+        alienShip = new Sprite( 5, 2);
         try {
             zombieEnemy = new Sprite(FolderType.images, ImageType.gif, "zombieEnemy2.gif");
         } catch (IOException ex) {

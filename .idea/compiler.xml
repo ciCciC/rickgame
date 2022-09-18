@@ -11,6 +11,7 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.16/lombok-1.18.16.jar" />
         </processorPath>
         <module name="alieninvaders" />
+        <module name="rickgame" />
       </profile>
     </annotationProcessing>
   </component>

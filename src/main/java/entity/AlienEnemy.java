@@ -98,8 +98,8 @@ public class AlienEnemy extends Entity implements CollisionBoundsAI {
     public void render(Graphics g) {
 
         g.setFont(font);
-        g.setColor(Color.RED);
-        g.drawString(this.filePath.getPath(), x, y);
+        g.setColor(Color.YELLOW);
+        g.drawString(this.filePath.getPath(), x-10, y);
 
         if (!deleted) {
             g.drawImage(Game.alienShip.getBufferedImage(), x, y, width, height, null);
@@ -107,7 +107,7 @@ public class AlienEnemy extends Entity implements CollisionBoundsAI {
             this.hide = true;
         }
 
-        RectangleBound.renderBoundAI(g, this, Color.RED);
+//        RectangleBound.renderBoundAI(g, this, Color.RED);
         RectangleBound.renderSeeingArea(g, this, Color.YELLOW);
     }
 

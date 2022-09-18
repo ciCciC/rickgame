@@ -8,7 +8,6 @@ import java.awt.geom.AffineTransform;
 public class RotateRectangle {
 
     public static void Render(Graphics g, Sprite sprite, int x, int y, double degrees){
-
         Graphics2D g2d = (Graphics2D)g.create();
         g2d.rotate(Math.toRadians(degrees), x+30, y+25);
         g2d.drawImage(sprite.animation[sprite.getIndex()], x, y, null);

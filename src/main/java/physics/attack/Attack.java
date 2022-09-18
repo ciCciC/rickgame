@@ -36,9 +36,11 @@ public abstract class Attack {
         }
 
         tile.x = distance_pos;
-        tile.y = player.getBoundsRight().y + 15;
+//        tile.y = player.getBoundsRight().y + 15;
+        tile.y = player.getBoundsRight().y;
         tile.width = TileProperty.WIDTH;
-        tile.height = 20;
+//        tile.height = 20;
+        tile.height = TileProperty.HEIGHT;
         tile.changeFacing(player.facing);
         return (T) tile;
     }

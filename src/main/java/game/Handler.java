@@ -2,6 +2,7 @@ package game;
 
 import comparator.ObjectComparator;
 import entity.AlienEnemy;
+import entity.Daniel;
 import entity.Entity;
 import entity.Rick;
 import enums.Id;
@@ -239,7 +240,7 @@ public class Handler {
 //        String filePath = "./resource/files";
 //        initFilesAsAliens(filePath);
         for (int i = 0; i < 5; i++) {
-            File tmp = new File("Stormtrooper");
+            File tmp = new File("Hakim");
             this.filePaths.add(tmp);
         }
 

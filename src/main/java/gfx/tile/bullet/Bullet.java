@@ -25,7 +25,7 @@ public class Bullet extends Tile {
         this.setTarget(target);
         this.velX = 4;
         this.destination = new Point();
-        sprite = Game.bullet;
+        sprite = Game.basketball;
     }
 
     //    private xAngle

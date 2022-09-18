@@ -92,7 +92,7 @@ public class KeyInput extends KeyAdapter {
         for (int i = 0; i < fireLength; i++) {
 
             if (Id.poop == id) {
-//                bul = new Poop(pl.getX() + 15, pl.getY() + 15, 64, 64, true, Id.bullet, handler);
+                bul = new Box(pl.getX() + 15, pl.getY() + 15, 64, 64, true, Id.bullet);
             } else if (Id.bullet == id) {
                 bul = new Bullet(pl.getX() + 15, pl.getY() + 15, 64, 64, true, Id.bullet);
             }
@@ -102,9 +102,9 @@ public class KeyInput extends KeyAdapter {
             bul.speed = (float) RandomNum.generateRandomNum(10, 30);
 
             //Wide attack
-            this.doWideAttack(bul, i);
+//            this.doWideAttack(bul, i);
             //Circle attack
-//            this.doCircleAttak(bul);
+            this.doCircleAttak(bul);
 
             handler.addBullets(bul);
             System.out.println("Bull:" + bul.toString());
@@ -233,8 +233,8 @@ public class KeyInput extends KeyAdapter {
                 entity.attackWide(new Bullet(true, Id.alienEnemy));
             }
 
-        } else if (key == KeyEvent.VK_V) {
-            this.generateAlienships(1, entity, "Demonzz");
+        }else if (key == KeyEvent.VK_V) {
+            this.generateAlienships(10, entity, "Hakim");
         } else if (key == KeyEvent.VK_B) {
             int distanceFromPl = 50;
             distanceFromPl = entity.facing == -1 ? entity.getX() - distanceFromPl : entity.getX() + distanceFromPl;

@@ -29,7 +29,8 @@ public class Rick extends Entity {
         this.isShooting = false;
         this.alreadyUnlocked = false;
 //        playerRick = new Sprite(new BufferedImage[16], Game.Game.sheet, 8, false, true);
-        spriteRick = new Sprite(new BufferedImage[9], 10, true, true);
+//        spriteRick = new Sprite(new BufferedImage[9], 10, true, true);
+        spriteRick = new Sprite(new BufferedImage[9], 14, true, true);
     }
 
     @Override
