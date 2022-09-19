@@ -7,6 +7,7 @@ import entity.Rick;
 import enums.Id;
 import game.util.GameArea;
 import gfx.tile.*;
+import gfx.tile.bullet.Beam;
 import lombok.NoArgsConstructor;
 import physics.TimeManager;
 import physics.attack.StraightAttack;
@@ -29,13 +30,15 @@ public class Handler {
 
     public static int kills = 0;
 
-    //    HIER MOET AANDACHT AAN BESTEED WORDEN VANWEGE MEMORY EFFICIENTIE!
+    //    TODO: Analyze memory efficiency!
     public LinkedList<Entity> entity = new LinkedList<>();
 
     public CopyOnWriteArrayList<Tile> tiles = new CopyOnWriteArrayList<>();
 
     public CopyOnWriteArrayList<File> filePaths = new CopyOnWriteArrayList<>();
     public CopyOnWriteArrayList<Tile> bullets = new CopyOnWriteArrayList<>();
+
+    public CopyOnWriteArrayList<Beam> beams = new CopyOnWriteArrayList<>();
 
     public CopyOnWriteArrayList<Tile> explosions = new CopyOnWriteArrayList<>();
 
@@ -84,7 +87,7 @@ public class Handler {
 //            }
 //        }
 
-        bullets.forEach(bullet -> {
+        bullets.parallelStream().forEach(bullet -> {
             if (getGameArea().getVisibleArea() != null && bullet.getBounds().intersects(getGameArea().getVisibleArea())) {
                 bullet.render(g);
             } else {
@@ -92,9 +95,11 @@ public class Handler {
             }
         });
 
-        this.explosions.forEach((explosion) -> explosion.render(g));
+        this.beams.parallelStream().forEach(beam -> beam.render(g));
 
-        this.timeManagers.forEach(time -> time.render(g));
+        this.explosions.parallelStream().forEach(explosion -> explosion.render(g));
+
+        this.timeManagers.parallelStream().forEach(time -> time.render(g));
     }
 
     public void tick() {
@@ -111,7 +116,7 @@ public class Handler {
 //            }
 //        }
 
-        this.tiles.forEach(tile -> {
+        this.tiles.parallelStream().forEach(tile -> {
             if (getGameArea().getVisibleArea() != null && tile.getBounds().intersects(getGameArea().getVisibleArea())) {
                 if (!tile.hide) {
                     tile.tick();
@@ -121,7 +126,7 @@ public class Handler {
 
         entity.sort(new ObjectComparator());
 
-        this.entity = this.entity.stream()
+        this.entity = this.entity.parallelStream()
                 .filter(val -> !val.hide)
                 .collect(Collectors.toCollection(LinkedList::new));
 
@@ -139,11 +144,11 @@ public class Handler {
             }
         }
 
-        this.bullets = this.bullets.stream()
+        this.bullets = this.bullets.parallelStream()
                 .filter(val -> !val.hide)
                 .collect(Collectors.toCollection(CopyOnWriteArrayList::new));
 
-        bullets.forEach(bullet -> {
+        bullets.parallelStream().forEach(bullet -> {
             if (getGameArea().getVisibleArea() != null && bullet.getBounds().intersects(getGameArea().getVisibleArea())) {
                 bullet.tick();
             } else {
@@ -164,17 +169,24 @@ public class Handler {
 //                b.tick();
 //            }
 //        }
-        this.explosions = this.explosions.stream()
+
+        this.beams = this.beams.parallelStream()
+                .filter(beam -> !beam.hide)
+                .collect(Collectors.toCollection(CopyOnWriteArrayList::new));
+
+        this.beams.forEach(Beam::tick);
+
+        this.explosions = this.explosions.parallelStream()
                 .filter(val -> !val.hide)
                 .collect(Collectors.toCollection(CopyOnWriteArrayList::new));
 
         this.explosions.forEach(Tile::tick);
 
-        this.timeManagers = this.timeManagers.stream()
+        this.timeManagers = this.timeManagers.parallelStream()
                 .filter(val -> !val.isNotBusy())
                 .collect(Collectors.toCollection(LinkedList::new));
 
-        this.timeManagers.forEach(TimeManager::tick);
+        this.timeManagers.parallelStream().forEach(TimeManager::tick);
     }
 
     public void addEntity(Entity en) {
@@ -294,6 +306,7 @@ public class Handler {
             enemy.setDepth(i);
             enemy.addFile(this.filePaths.get(i));
             enemy.setSpeed(5);
+
             this.addEntity(enemy);
         }
     }

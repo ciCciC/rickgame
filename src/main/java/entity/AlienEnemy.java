@@ -3,6 +3,7 @@ package entity;
 import audio.MusicPlayer;
 import enums.*;
 import game.*;
+import gfx.tile.bullet.Beam;
 import gfx.tile.bullet.Bullet;
 import gfx.tile.*;
 import gfx.tile.bullet.TwirlBullet;
@@ -22,7 +23,10 @@ public class AlienEnemy extends Entity implements CollisionBoundsAI {
 
     public boolean jumpAICommand;
 
+    public int areaWidth;
     public int rightAreaWidth, leftAreaWidth;
+
+    public int analyseBeamId;
 
     //    private float gravity = 0.08F;
     private float MAX_SPEED;
@@ -32,6 +36,7 @@ public class AlienEnemy extends Entity implements CollisionBoundsAI {
     private int jumpingPower;
 
     private Bullet bullet;
+    private Beam beam;
 
     private TimeManager timeManagerRight, timeManagerLeft;
 
@@ -45,7 +50,9 @@ public class AlienEnemy extends Entity implements CollisionBoundsAI {
         this.deleted = false;
         this.falling = true;
         this.jumpingPower = 5;
+        this.areaWidth = 200;
         this.initSeeingArea();
+        this.initBeamAnalyser();
         this.timeManagerRight = new TimeManager();
         this.timeManagerLeft = new TimeManager();
     }
@@ -59,8 +66,8 @@ public class AlienEnemy extends Entity implements CollisionBoundsAI {
     }
 
     private void initSeeingArea() {
-        this.leftAreaWidth = 100;
-        this.rightAreaWidth = 100;
+        this.leftAreaWidth = this.areaWidth;
+        this.rightAreaWidth = this.areaWidth;
     }
 
     public void setSpeed(float speed) {
@@ -86,6 +93,8 @@ public class AlienEnemy extends Entity implements CollisionBoundsAI {
     public boolean deleteTouchedFile() {
         System.out.println("Box contents: " + this.filePath.getName());
         this.deleted = true;
+        this.beam.hide = true;
+
         if (!this.filePath.getName().contains("MEMEZ")) {
             this.deleted = this.filePath.delete();
         }
@@ -96,7 +105,6 @@ public class AlienEnemy extends Entity implements CollisionBoundsAI {
 
     @Override
     public void render(Graphics g) {
-
         g.setFont(font);
         g.setColor(Color.RED);
         g.drawString(this.filePath.getPath(), x, y);
@@ -187,6 +195,8 @@ public class AlienEnemy extends Entity implements CollisionBoundsAI {
                 if (this.getLeftArea().intersects(entity.getBoundsRight())) {
                     this.shoot(2, -1, entity, timeManagerLeft);
                 }
+
+                this.beamBehavior(entity);
             }
         }
     }
@@ -230,13 +240,23 @@ public class AlienEnemy extends Entity implements CollisionBoundsAI {
     }
 
     private void growAreasWidth() {
-        if (this.rightAreaWidth < 100) {
+        if (this.rightAreaWidth < this.areaWidth) {
             this.rightAreaWidth += 2;
         }
 
-        if (this.leftAreaWidth < 100) {
+        if (this.leftAreaWidth < this.areaWidth) {
             this.leftAreaWidth += 2;
         }
+    }
+
+    private void initBeamAnalyser(){
+        this.beam = new Beam(this.getX(), this.getY(), 5, true, Id.beam);
+        getHandlerInstance().beams.add(this.beam);
+    }
+
+    private void beamBehavior(Entity entity){
+        this.beam.setFrom(this.getX()+(this.getWidth()/2), this.getY()+this.getHeight()/2);
+        this.beam.setTo(entity.getX()+(entity.getWidth()/2), entity.getY()+(entity.getHeight()/2));
     }
 
     private void shoot(int duration, int direction, Entity entity, TimeManager timeManager) {

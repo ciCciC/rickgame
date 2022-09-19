@@ -14,6 +14,7 @@ public enum Id {
     sideWallRight,
     squareWall,
     bullet,
+    beam,
     twirl,
     poop,
     explosion,

@@ -96,29 +96,26 @@ public class Bullet extends Tile {
         x += this.getFacing() == -1 ? -velX : velX;
         y += velY + (this.growth * 4);
 
-        this.bullitCollision();
+        this.bulletCollision();
     }
 
-    private void bullitCollision() {
-        boolean hitted = false;
+    private void bulletCollision() {
+        boolean isHit = false;
 
         for (Entity tile : getHandlerInstance().entity) {
 
             if (tile.getId() == this.getTarget()) {
 
-                if (getBoundsBottom().intersects(tile.getBoundsTop())) {
-                    hitted = true;
-                } else if (getBoundsTop().intersects(tile.getBoundsBottom())) {
-                    hitted = true;
-                } else if (getBoundsRight().intersects(tile.getBoundsLeft())) {
-                    hitted = true;
-                } else if (getBoundsLeft().intersects(tile.getBoundsRight())) {
-                    hitted = true;
+                if (getBoundsBottom().intersects(tile.getBoundsTop())
+                || getBoundsTop().intersects(tile.getBoundsBottom())
+                || getBoundsRight().intersects(tile.getBoundsLeft())
+                || getBoundsLeft().intersects(tile.getBoundsRight())) {
+                    isHit = true;
                 }
 
-                if (hitted) {
+                if (isHit) {
                     getHandlerInstance().addExplosion(new Explosion(tile.getX(), tile.getY(), 64, 64, true, Id.explosion));
-//                    Voor het verwijderen van een bestand.
+//                    For deletion of a file.
                     if (this.target == Id.alienEnemy) {
                         AlienEnemy alienEnemy = (AlienEnemy) tile;
                         alienEnemy.deleteTouchedFile();
